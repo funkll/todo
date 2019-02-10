@@ -10,9 +10,6 @@ var e = function(selector) {
     }
 }
 
-// todo 开局缓存
-// todo 整理一下重构思路
-// todo 添加ajax数据交换
 // todo 使用list-group并不好，要换成别的
 
 var bindEdit = () => {
