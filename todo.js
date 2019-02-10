@@ -15,7 +15,7 @@ var e = function(selector) {
 // todo 添加ajax数据交换
 // todo 使用list-group并不好，要换成别的
 
-var actionEdit = () => {
+var bindEdit = () => {
     var self = event.target
     if (self.classList.contains('todo-edit')) {
         var todoContent = self.closest('.todo-edit')
@@ -23,7 +23,7 @@ var actionEdit = () => {
         todoContent.focus()
     }
 }
-var actionUpdate = () => {
+var bindUpdate = () => {
     var self = event.target
     if (self.classList.contains('todo-edit')) {
         if (event.key == 'Enter') {
@@ -32,7 +32,7 @@ var actionUpdate = () => {
         }
     }
 }
-var actionDone = () => {
+var bindDone = () => {
     var self = event.target
     if (self.classList.contains('done')) {
         var todoItem = self.closest('.list-group-item')
@@ -55,18 +55,18 @@ var templateTodo = (todo) => {
     return t
 }
 
-var actionAdd = (todoContainer) => {
+var bindAdd = (todoContainer) => {
     var self = event.target
     var todo = e('.todo-input').value
-    var todo = templateTodo(todo)
     if (self.classList.contains('add')){
         if (todo.length !== 0) {
+            var todo = templateTodo(todo)
             todoContainer.insertAdjacentHTML("beforeend", todo)
         }
     }
 }
 
-var actionDelete = () => {
+var bindDelete = () => {
     var self = event.target
     if (self.classList.contains('remove')){
         var button = self.closest('.list-group')
@@ -74,21 +74,21 @@ var actionDelete = () => {
     }
 }
 
-var bindAction = () => {
+var bindEvents = () => {
     var todoContainer = e('.todo-container')
     todoContainer.addEventListener('click', function () {
-        actionAdd(todoContainer)
-        actionDelete()
-        actionDone()
-        actionEdit()
+        bindAdd(todoContainer)
+        bindDelete()
+        bindDone()
+        bindEdit()
     })
     todoContainer.addEventListener('keydown', function () {
-        actionUpdate()
+        bindUpdate()
     })
 }
 
 var __main = () => {
-    bindAction()
+    bindEvents()
 }
 
 __main()
