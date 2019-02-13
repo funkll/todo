@@ -12,33 +12,26 @@ var e = function(selector) {
 
 // todo 使用list-group并不好，要换成别的
 
-var bindEdit = () => {
-    var self = event.target
-    if (self.classList.contains('todo-edit')) {
-        var todoContent = self.closest('.todo-edit')
-        todoContent.contentEditable = true
-        todoContent.focus()
+const bindEdit = (self) => {
+    const todoContent = self.closest('.todo-edit')
+    todoContent.contentEditable = true
+    todoContent.focus()
+}
+
+const bindUpdate = (self) => {
+    if (event.key == 'Enter') {
+        event.preventDefault()
+        self.contentEditable = false
     }
 }
-var bindUpdate = () => {
-    var self = event.target
-    if (self.classList.contains('todo-edit')) {
-        if (event.key == 'Enter') {
-            event.preventDefault()
-            self.contentEditable = false
-        }
-    }
+const bindDone = (self) => {
+    const todoItem = self.closest('.list-group-item')
+    const todoContent = todoItem.querySelector('.todo-edit')
+    todoContent.classList.toggle('active')
 }
-var bindDone = () => {
-    var self = event.target
-    if (self.classList.contains('done')) {
-        var todoItem = self.closest('.list-group-item')
-        var todoContent = todoItem.querySelector('.todo-edit')
-        todoContent.classList.toggle('active')
-    }
-}
-var templateTodo = (todo) => {
-    var t = `
+
+const templateTodo = (todo) => {
+    const t = `
         <div class="list-group">
             <div class="list-group-item">
                 <label class="btn active">
@@ -52,40 +45,43 @@ var templateTodo = (todo) => {
     return t
 }
 
-var bindAdd = (todoContainer) => {
-    var self = event.target
+const bindAdd = (todoContainer) => {
     var todo = e('.todo-input').value
-    if (self.classList.contains('add')){
-        if (todo.length !== 0) {
-            var todo = templateTodo(todo)
-            todoContainer.insertAdjacentHTML("beforeend", todo)
-        }
+    if (todo.length !== 0) {
+        var todo = templateTodo(todo)
+        todoContainer.insertAdjacentHTML("beforeend", todo)
     }
 }
 
-var bindDelete = () => {
-    var self = event.target
-    if (self.classList.contains('remove')){
-        var button = self.closest('.list-group')
-        button.remove()
-    }
+const bindDelete = (self) => {
+    const button = self.closest('.list-group')
+    button.remove()
 }
 
-var bindEvents = () => {
-    var todoContainer = e('.todo-container')
+const bindEventDelegates = () => {
+    const todoContainer = e('.todo-container')
     todoContainer.addEventListener('click', function () {
-        bindAdd(todoContainer)
-        bindDelete()
-        bindDone()
-        bindEdit()
+        const self = event.target
+        if (self.classList.contains('remove')){
+            bindDelete(self)
+        } else if (self.classList.contains('add')){
+            bindAdd(todoContainer)
+        } else if (self.classList.contains('done')) {
+            bindDone(self)
+        } else if (self.classList.contains('todo-edit')) {
+            bindEdit(self)
+        }
     })
     todoContainer.addEventListener('keydown', function () {
-        bindUpdate()
+        const self = event.target
+        if (self.classList.contains('todo-edit')) {
+            bindUpdate(self)
+        }
     })
 }
 
-var __main = () => {
-    bindEvents()
+const __main = () => {
+    bindEventDelegates()
 }
 
 __main()
